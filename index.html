@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1B3A6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="생활법률119">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="법을 몰라서 포기하는 사람이 없도록 — 실제 판례·법령 기반 시민 생활법률 AI 플랫폼">
+<link rel="manifest" href="manifest.json">
+<title>생활법률 119 — 내 권리를 지키는 AI</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1B3A6B;--navy2:#2C5AA0;--navy-l:#EBF2FB;
+  --red:#C0392B;--red-l:#FDECEA;
+  --yellow:#C87D0A;--yellow-l:#FEF3DC;
+  --green:#1A7A4A;--green-l:#EAF7F0;
+  --gray-bg:#F4F5F8;--gray-bd:#E0E4EB;--gray-t:#6B7280;
+  --text:#1A1D23;--white:#fff;--r:12px;--rs:8px;
+}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(--gray-bg);color:var(--text);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+
+/* 모바일 하단 네비 */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--gray-bd);z-index:300;padding-bottom:env(safe-area-inset-bottom)}
+.mob-nav-inner{display:flex;height:56px}
+.mob-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--gray-t);font-family:inherit;transition:color .15s;font-size:10px;font-weight:600;padding:0}
+.mob-tab.on{color:var(--navy)}
+.mob-tab .mi{font-size:20px;line-height:1}
+@media(max-width:680px){
+  .mob-nav{display:block}
+  nav .nav-tabs{display:none}
+  .wrap{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  .api-banner{bottom:calc(56px + env(safe-area-inset-bottom))}
+}
+
+nav{background:var(--navy);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;height:54px;padding:0 16px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:auto}
+.logo-ic{width:30px;height:30px;background:#C0392B;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.logo-t{color:#fff;font-size:15px;font-weight:800;letter-spacing:-.3px}
+.logo-b{color:rgba(255,255,255,.4);font-size:11px;margin-left:3px}
+.nav-tabs{display:flex;height:54px}
+.ntab{background:none;border:none;color:rgba(255,255,255,.6);font-size:12px;font-weight:600;padding:0 13px;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;font-family:inherit;white-space:nowrap}
+.ntab:hover{color:#fff}
+.ntab.on{color:#fff;border-bottom-color:#fff}
+
+.wrap{max-width:980px;margin:0 auto;padding:22px 14px 60px}
+.page{display:none}.page.on{display:block}
+
+.card{background:var(--white);border:1px solid var(--gray-bd);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.card-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.card-sub{font-size:13px;color:var(--gray-t);line-height:1.6;margin-bottom:14px}
+
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}
+.cbt{background:var(--white);border:1.5px solid var(--gray-bd);border-radius:var(--r);padding:13px 8px;cursor:pointer;text-align:center;transition:all .15s;font-family:inherit}
+.cbt:hover{border-color:var(--navy2);background:var(--navy-l)}
+.cbt.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.cbt .ci{font-size:20px;display:block;margin-bottom:4px}
+.cbt .cn{font-size:12px;font-weight:700;display:block}
+.cbt .cd{font-size:10px;color:var(--gray-t);margin-top:2px;display:block}
+.cbt.on .cd{color:rgba(255,255,255,.6)}
+
+textarea.inp{width:100%;border:1.5px solid var(--gray-bd);border-radius:var(--rs);padding:12px;font-size:14px;line-height:1.75;font-family:inherit;resize:vertical;min-height:100px;color:var(--text);background:var(--gray-bg);transition:border-color .15s}
+textarea.inp:focus{outline:none;border-color:var(--navy2);background:#fff}
+textarea.inp::placeholder{color:#B5BDC9}
+.inp-s{width:100%;border:1.5px solid var(--gray-bd);border-radius:var(--rs);padding:9px 12px;font-size:13px;font-family:inherit;color:var(--text);background:var(--gray-bg);transition:border-color .15s}
+.inp-s:focus{outline:none;border-color:var(--navy2);background:#fff}
+
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.chip{font-size:11px;color:var(--navy2);background:var(--navy-l);border:1px solid #C5D9EF;border-radius:999px;padding:3px 9px;cursor:pointer;transition:all .15s}
+.chip:hover{background:var(--navy2);color:#fff}
+
+.btn{background:var(--navy);color:#fff;border:none;border-radius:var(--rs);padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#142E55}
+.btn:disabled{background:#B0B8C5;cursor:not-allowed}
+.btn.full{width:100%;justify-content:center;margin-top:12px}
+.btn.sec{background:#fff;color:var(--navy);border:1.5px solid var(--gray-bd);font-size:12px;padding:8px 13px}
+.btn.sec:hover{background:var(--navy-l);border-color:var(--navy2)}
+.btn.red{background:var(--red)}
+.btn.red:hover{background:#922b21}
+
+.sig-bar{padding:15px 18px;display:flex;align-items:center;gap:12px;border-radius:var(--r) var(--r) 0 0}
+.sig-bar.danger{background:var(--red-l);border-left:5px solid var(--red)}
+.sig-bar.warn{background:var(--yellow-l);border-left:5px solid var(--yellow)}
+.sig-bar.safe{background:var(--green-l);border-left:5px solid var(--green)}
+.sig-bar.loading{background:var(--navy-l);border-left:5px solid var(--navy2)}
+.sig-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.sig-dot.loading{animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sig-lbl{font-size:14px;font-weight:700}
+.sig-lbl.danger{color:var(--red)}.sig-lbl.warn{color:var(--yellow)}.sig-lbl.safe{color:var(--green)}.sig-lbl.loading{color:var(--navy)}
+.sig-desc{font-size:12px;color:var(--gray-t);margin-top:2px}
+
+.res-body{padding:18px}
+.res-sec{margin-bottom:18px}
+.res-sec-title{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:5px;border-bottom:1.5px solid var(--navy-l)}
+.res-text{font-size:14px;line-height:1.85;color:var(--text);white-space:pre-wrap}
+.law-tag{display:inline-flex;align-items:center;gap:3px;background:var(--navy-l);color:var(--navy);font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;margin:2px;text-decoration:none}
+.law-tag:hover{background:var(--navy);color:#fff}
+.prec-item{border:1px solid var(--gray-bd);border-radius:var(--rs);padding:12px;margin-bottom:8px;transition:border-color .15s}
+.prec-item:hover{border-color:var(--navy2)}
+.prec-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.prec-meta{font-size:11px;color:var(--gray-t);margin-bottom:6px}
+.prec-sum{font-size:13px;line-height:1.7}
+.prec-link{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--navy2);text-decoration:none;margin-top:7px;font-weight:600}
+.prec-link:hover{text-decoration:underline}
+.act-box{background:var(--gray-bg);border-radius:var(--rs);padding:13px}
+.act-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.65;margin-bottom:7px}
+.act-item:last-child{margin-bottom:0}
+.act-num{width:18px;height:18px;background:var(--navy);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.expert-cta{background:var(--navy);border-radius:var(--rs);padding:15px 17px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.expert-cta p{color:rgba(255,255,255,.78);font-size:12px;line-height:1.5}
+.expert-cta strong{color:#fff;font-size:13px;display:block;margin-bottom:2px}
+.expert-btn{background:#fff;color:var(--navy);font-size:12px;font-weight:700;border:none;border-radius:var(--rs);padding:8px 13px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.disclaimer{font-size:11px;color:var(--gray-t);margin-top:14px;padding-top:12px;border-top:1px solid var(--gray-bd);line-height:1.6}
+
+.doc-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}
+.dtab{background:var(--white);border:1.5px solid var(--gray-bd);border-radius:var(--rs);padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-t);font-family:inherit;transition:all .15s}
+.dtab:hover{border-color:var(--navy2);color:var(--navy)}
+.dtab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.doc-preview{background:#FAFAFA;border:1px solid var(--gray-bd);border-radius:var(--rs);padding:18px;font-size:13px;line-height:2.1;white-space:pre-wrap;font-family:'Malgun Gothic','Apple SD Gothic Neo',serif;min-height:280px}
+
+.search-row{display:flex;gap:7px;margin-bottom:12px}
+.search-row .inp-s{flex:1}
+
+/* 판례 직접 검색 */
+.direct-search-box{background:var(--navy-l);border:1.5px solid #C5D9EF;border-radius:var(--rs);padding:14px;margin-bottom:12px}
+.direct-search-box p{font-size:12px;color:var(--navy);margin-bottom:9px;font-weight:600}
+.direct-btns{display:flex;gap:7px;flex-wrap:wrap}
+.direct-btn{display:inline-flex;align-items:center;gap:5px;background:var(--white);border:1px solid #C5D9EF;border-radius:var(--rs);padding:8px 13px;font-size:12px;font-weight:700;color:var(--navy);text-decoration:none;cursor:pointer;transition:all .15s}
+.direct-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+.hist-item{border:1px solid var(--gray-bd);border-radius:var(--rs);padding:13px;cursor:pointer;transition:all .15s;margin-bottom:8px}
+.hist-item:hover{border-color:var(--navy2);background:var(--navy-l)}
+.hist-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.hist-cat{font-size:11px;font-weight:700;color:var(--navy2);background:var(--navy-l);padding:2px 7px;border-radius:999px}
+.hist-date{font-size:11px;color:var(--gray-t)}
+.hist-sig{display:inline-block;font-size:11px;font-weight:700;margin-top:5px;padding:2px 7px;border-radius:999px}
+.hist-sig.danger{background:var(--red-l);color:var(--red)}.hist-sig.warn{background:var(--yellow-l);color:var(--yellow)}.hist-sig.safe{background:var(--green-l);color:var(--green)}
+
+.agency-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.ag-card{background:var(--white);border:1px solid var(--gray-bd);border-radius:var(--rs);padding:13px;text-decoration:none;transition:all .15s;display:block}
+.ag-card:hover{border-color:var(--navy2);background:var(--navy-l)}
+.ag-icon{font-size:20px;margin-bottom:5px}
+.ag-name{font-size:13px;font-weight:700;color:var(--navy)}
+.ag-tel{font-size:13px;color:var(--red);font-weight:700;margin-top:2px}
+.ag-desc{font-size:11px;color:var(--gray-t);margin-top:2px;line-height:1.5}
+
+/* 설정 */
+.ai-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
+.ai-card{border:1.5px solid var(--gray-bd);border-radius:var(--rs);padding:13px;cursor:pointer;transition:all .15s;background:var(--white)}
+.ai-card:hover{border-color:var(--navy2)}
+.ai-card.on{border-color:var(--navy);background:var(--navy-l)}
+.ai-card .ai-name{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.ai-card .ai-desc{font-size:11px;color:var(--gray-t)}
+.ai-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px}
+.ai-badge.free{background:#EAF7F0;color:var(--green)}
+.ai-badge.paid{background:#FEF3DC;color:var(--yellow)}
+
+.api-banner{position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:11px 18px;z-index:300;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.api-banner p{font-size:13px}
+.spinner{width:15px;height:15px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:40px 20px;color:var(--gray-t)}
+.empty-icon{font-size:36px;margin-bottom:10px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-head h2{font-size:17px;font-weight:800;color:var(--navy)}
+.label{font-size:12px;font-weight:600;color:var(--gray-t);margin-bottom:5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+@media(max-width:600px){.cat-grid{grid-template-columns:repeat(2,1fr)}.agency-grid,.ai-grid,.grid2{grid-template-columns:1fr}.expert-cta{flex-direction:column}.ntab{padding:0 9px;font-size:11px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#"><div class="logo-ic">🆘</div><span class="logo-t">생활법률 119<span class="logo-b">beta</span></span></a>
+    <div class="nav-tabs">
+      <button class="ntab on" onclick="goPage('analyze',this)">AI 분석</button>
+      <button class="ntab" onclick="goPage('docs',this)">문서 작성</button>
+      <button class="ntab" onclick="goPage('lawsearch',this)">법령·판례</button>
+      <button class="ntab" onclick="goPage('calc',this)">💰 계산기</button>
+      <button class="ntab" onclick="goPage('checklist',this)">✅ 체크리스트</button>
+      <button class="ntab" onclick="goPage('history',this)">내 기록</button>
+      <button class="ntab" onclick="goPage('agency',this)">기관 안내</button>
+      <button class="ntab" onclick="goPage('settings',this)">⚙️ 설정</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ AI 분석 ══ -->
+<div class="wrap page on" id="p-analyze">
+  <div style="background:var(--navy);border-radius:var(--r);padding:22px 20px;margin-bottom:18px;text-align:center">
+    <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);font-size:11px;padding:4px 11px;border-radius:999px;margin-bottom:10px;border:1px solid rgba(255,255,255,.15)">⚖️ 실제 판례·법령 기반 AI 분석</div>
+    <div style="color:#fff;font-size:21px;font-weight:800;letter-spacing:-.4px;margin-bottom:7px">내 권리, 지금 바로 확인하세요</div>
+    <div style="color:rgba(255,255,255,.6);font-size:13px;line-height:1.7">상황을 입력하면 AI가 실제 판례 기반으로 위험 여부를 즉시 알려드립니다</div>
+  </div>
+  <div class="card">
+    <div class="cat-grid" id="catGrid">
+      <button class="cbt on" data-cat="contract" onclick="selCat(this)"><span class="ci">📄</span><span class="cn">계약서 분석</span><span class="cd">알바·PT·약정</span></button>
+      <button class="cbt" data-cat="estate" onclick="selCat(this)"><span class="ci">🏠</span><span class="cn">부동산·임차인</span><span class="cd">깡통전세·특약</span></button>
+      <button class="cbt" data-cat="labor" onclick="selCat(this)"><span class="ci">💼</span><span class="cn">노동권 보호</span><span class="cd">퇴직금·연차</span></button>
+      <button class="cbt" data-cat="medical" onclick="selCat(this)"><span class="ci">🏥</span><span class="cn">의료비 점검</span><span class="cd">과다청구 감지</span></button>
+      <button class="cbt" data-cat="consumer" onclick="selCat(this)"><span class="ci">🛍️</span><span class="cn">소비자 분쟁</span><span class="cd">환불거부·사기</span></button>
+      <button class="cbt" data-cat="utility" onclick="selCat(this)"><span class="ci">🔧</span><span class="cn">공과금·하자</span><span class="cd">이상청구·보수</span></button>
+    </div>
+    <div class="card-title" id="panelTitle">📄 계약서 내용을 입력하세요</div>
+    <div class="card-sub" id="panelSub">계약서의 주요 조항이나 의심스러운 내용을 그대로 붙여넣거나 상황을 설명해주세요.</div>
+    <textarea class="inp" id="inputArea" placeholder="예: 근무 중 발생한 모든 사고에 대한 책임은 직원 본인이 진다. 주휴수당은 지급하지 않는다..."></textarea>
+    <div class="chips" id="exChips"></div>
+    <button class="btn full" id="analyzeBtn" onclick="analyze()"><span id="btnTxt">⚖️ AI 법률 분석 시작</span></button>
+  </div>
+  <div id="resultWrap" style="display:none">
+    <div style="background:var(--white);border:1px solid var(--gray-bd);border-radius:var(--r);overflow:hidden">
+      <div class="sig-bar" id="sigBar"><div class="sig-dot" id="sigDot"></div><div><div class="sig-lbl" id="sigLbl"></div><div class="sig-desc" id="sigDesc"></div></div></div>
+      <div class="res-body">
+        <div class="res-sec"><div class="res-sec-title">📋 분석 결과</div><div class="res-text" id="resMain"></div></div>
+        <div class="res-sec"><div class="res-sec-title">⚖️ 관련 법령 (클릭 → 국가법령정보센터)</div><div id="resLaws"></div></div>
+        <div class="res-sec"><div class="res-sec-title">📚 관련 판례 (클릭 → 대법원 법고을)</div><div id="resPrecedents"></div></div>
+        <div class="res-sec"><div class="res-sec-title">✅ 지금 바로 할 수 있는 행동</div><div class="act-box" id="resActions"></div></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn sec" onclick="goDocFromAnalysis()">📝 문서 작성하기</button>
+          <button class="btn sec" onclick="saveHistory()">💾 기록 저장</button>
+          <button class="btn sec" onclick="shareResult()">📤 공유</button>
+        </div>
+        <div class="expert-cta"><div><strong>전문가 상담이 필요하신가요?</strong><p>법률구조공단 무료 상담 · 노무사 연결</p></div><button class="expert-btn" onclick="window.open('https://www.klac.or.kr','_blank')">무료 상담 →</button></div>
+        <div class="disclaimer">⚠️ 이 서비스는 법적 정보 제공을 목적으로 하며 법률 자문이 아닙니다. 실제 법적 조치는 반드시 전문가와 상담하세요.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 문서 작성 ══ -->
+<div class="wrap page" id="p-docs">
+  <div class="sec-head"><h2>📝 법적 문서 자동 작성</h2></div>
+  <div class="card">
+    <div class="card-title">문서 종류</div>
+    <div class="card-sub">실제 제출 가능한 수준의 법적 문서를 AI가 작성해드립니다.</div>
+    <div class="doc-tabs" id="docTypeTabs">
+      <button class="dtab on" data-dtype="고소장" onclick="selDocType(this)">고소장</button>
+      <button class="dtab" data-dtype="진정서" onclick="selDocType(this)">진정서 (노동부)</button>
+      <button class="dtab" data-dtype="내용증명" onclick="selDocType(this)">내용증명</button>
+      <button class="dtab" data-dtype="소비자신고서" onclick="selDocType(this)">소비자 신고서</button>
+      <button class="dtab" data-dtype="하자보수청구서" onclick="selDocType(this)">하자보수 청구서</button>
+      <button class="dtab" data-dtype="이의신청서" onclick="selDocType(this)">이의신청서</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">기본 정보</div>
+    <div class="grid2">
+      <div><div class="label">신청인 이름</div><input class="inp-s" id="doc-name" placeholder="홍길동"></div>
+      <div><div class="label">연락처</div><input class="inp-s" id="doc-tel" placeholder="010-0000-0000"></div>
+      <div><div class="label">신청인 주소</div><input class="inp-s" id="doc-addr" placeholder="서울시 OO구 OO동"></div>
+      <div><div class="label">상대방(피신청인)</div><input class="inp-s" id="doc-target" placeholder="업체명 또는 이름"></div>
+    </div>
+    <div class="label">피해 상황 상세 설명</div>
+    <textarea class="inp" id="doc-situation" placeholder="언제, 어디서, 어떤 피해를 입었는지 구체적으로 입력해주세요. 날짜·금액·경위 포함할수록 문서 품질이 높아집니다." style="min-height:120px"></textarea>
+    <button class="btn full" id="docBtn" onclick="makeDoc()"><span id="docBtnTxt">📝 AI로 문서 작성하기</span></button>
+  </div>
+  <div id="docResultWrap" style="display:none">
+    <div class="card">
+      <div class="sec-head" style="margin-bottom:10px"><div class="card-title" id="docResultTitle">고소장</div><div style="display:flex;gap:6px"><button class="btn sec" onclick="copyDoc()">📋 복사</button><button class="btn sec" onclick="downloadDoc()">⬇️ 다운로드</button></div></div>
+      <div class="doc-preview" id="docPreview"></div>
+      <div class="disclaimer">⚠️ AI 초안입니다. 실제 제출 전 내용을 검토하고 전문가 확인을 받으세요. 법률구조공단(132) 무료 검토 가능합니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 법령·판례 ══ -->
+<div class="wrap page" id="p-lawsearch">
+  <div class="sec-head"><h2>⚖️ 법령·판례 검색</h2></div>
+
+  <!-- 판례 직접 검색 (AI 없이) -->
+  <div class="card">
+    <div class="card-title">🏛️ 판례 직접 검색 — AI 없이 바로 검색</div>
+    <div class="card-sub">아래 버튼을 누르면 국가법령정보센터·대법원 법고을로 직접 연결됩니다. API 키 없이도 사용 가능합니다.</div>
+    <div class="search-row">
+      <input class="inp-s" id="directSearchInp" placeholder="검색어 입력 (예: 주휴수당, 부당해고, 깡통전세...)">
+      <button class="btn" onclick="directSearch()">🔍 직접 검색</button>
+    </div>
+    <div class="direct-btns" id="directBtns">
+      <a class="direct-btn" onclick="directSearchWith('주휴수당')">주휴수당</a>
+      <a class="direct-btn" onclick="directSearchWith('부당해고')">부당해고</a>
+      <a class="direct-btn" onclick="directSearchWith('임대차보증금')">보증금 반환</a>
+      <a class="direct-btn" onclick="directSearchWith('퇴직금')">퇴직금</a>
+      <a class="direct-btn" onclick="directSearchWith('소비자환불')">환불 거부</a>
+      <a class="direct-btn" onclick="directSearchWith('의료비과다청구')">의료비 과다청구</a>
+    </div>
+    <div id="directResult" style="margin-top:14px;display:none">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:9px" id="directResultTitle"></div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="directResultLinks"></div>
+    </div>
+  </div>
+
+  <!-- AI 법령 검색 -->
+  <div class="card">
+    <div class="card-title">📖 법령 검색 (AI 분석 포함)</div>
+    <div class="card-sub">AI가 법령 주요 조문과 내용을 요약해드립니다. API 키 필요.</div>
+    <div class="search-row">
+      <input class="inp-s" id="lawSearchInp" placeholder="예: 근로기준법, 주택임대차보호법..." onkeydown="if(event.key==='Enter')searchLaw()">
+      <button class="btn" onclick="searchLaw()"><span id="lawBtnTxt">🔍 검색</span></button>
+    </div>
+    <div class="chips">
+      <span class="chip" onclick="quickLaw('근로기준법')">근로기준법</span>
+      <span class="chip" onclick="quickLaw('주택임대차보호법')">주택임대차보호법</span>
+      <span class="chip" onclick="quickLaw('소비자기본법')">소비자기본법</span>
+      <span class="chip" onclick="quickLaw('전자상거래법')">전자상거래법</span>
+    </div>
+    <div id="lawResults" style="margin-top:12px"></div>
+  </div>
+
+  <!-- AI 판례 검색 -->
+  <div class="card">
+    <div class="card-title">📚 판례 AI 검색 (요약 포함)</div>
+    <div class="card-sub">키워드로 관련 판례를 검색하고 핵심 내용을 요약해드립니다. API 키 필요.</div>
+    <div class="search-row">
+      <input class="inp-s" id="precSearchInp" placeholder="예: 주휴수당, 부당해고, 깡통전세..." onkeydown="if(event.key==='Enter')searchPrecedent()">
+      <button class="btn" onclick="searchPrecedent()"><span id="precBtnTxt">🔍 검색</span></button>
+    </div>
+    <div class="chips">
+      <span class="chip" onclick="quickPrec('주휴수당')">주휴수당</span>
+      <span class="chip" onclick="quickPrec('부당해고')">부당해고</span>
+      <span class="chip" onclick="quickPrec('임대차보증금')">보증금 반환</span>
+      <span class="chip" onclick="quickPrec('퇴직금')">퇴직금</span>
+    </div>
+    <div id="precResults" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- ══ 계산기 ══ -->
+<div class="wrap page" id="p-calc">
+  <div class="sec-head"><h2>💰 권리 자동 계산기</h2></div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">퇴직금 계산기</div>
+    <div class="card-sub">근로기준법 제34조 기준. 1년 이상 근무 시 퇴직금 발생.</div>
+    <div class="grid2">
+      <div><div class="label">월 평균임금 (원)</div><input class="inp-s" id="rc-wage" type="number" placeholder="2300000" oninput="calcRetire()"></div>
+      <div><div class="label">근무 기간</div><div style="display:flex;gap:6px"><input class="inp-s" id="rc-year" type="number" placeholder="년" style="width:70px" oninput="calcRetire()"><input class="inp-s" id="rc-month" type="number" placeholder="개월" style="width:70px" oninput="calcRetire()"></div></div>
+    </div>
+    <div id="rc-result" style="display:none;margin-top:14px;background:var(--navy-l);border-radius:var(--rs);padding:16px">
+      <div style="font-size:12px;color:var(--gray-t);margin-bottom:4px">예상 퇴직금</div>
+      <div style="font-size:28px;font-weight:800;color:var(--navy)" id="rc-amount"></div>
+      <div style="font-size:12px;color:var(--gray-t);margin-top:6px" id="rc-formula"></div>
+      <div style="font-size:12px;color:var(--red);margin-top:8px">⚠️ 퇴직금을 못 받은 경우 → 고용노동부 1350 신고</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">주휴수당 계산기</div>
+    <div class="card-sub">근로기준법 제55조 기준. 주 15시간 이상 근무 시 발생.</div>
+    <div class="grid2">
+      <div><div class="label">시급 (원)</div><input class="inp-s" id="hw-wage" type="number" placeholder="9860" oninput="calcHoliday()"></div>
+      <div><div class="label">주당 근무시간</div><input class="inp-s" id="hw-hours" type="number" placeholder="40" oninput="calcHoliday()"></div>
+    </div>
+    <div id="hw-result" style="display:none;margin-top:14px;background:var(--navy-l);border-radius:var(--rs);padding:16px">
+      <div style="font-size:12px;color:var(--gray-t);margin-bottom:4px">주당 주휴수당</div>
+      <div style="font-size:28px;font-weight:800;color:var(--navy)" id="hw-amount"></div>
+      <div style="font-size:12px;color:var(--gray-t);margin-top:6px" id="hw-formula"></div>
+      <div style="font-size:12px;color:var(--red);margin-top:8px" id="hw-warn"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">연차수당 계산기</div>
+    <div class="card-sub">근로기준법 제60조 기준. 미사용 연차에 대해 수당 청구 가능.</div>
+    <div class="grid2">
+      <div><div class="label">일 평균임금 (원)</div><input class="inp-s" id="al-wage" type="number" placeholder="100000" oninput="calcAnnual()"></div>
+      <div><div class="label">미사용 연차일수</div><input class="inp-s" id="al-days" type="number" placeholder="5" oninput="calcAnnual()"></div>
+      <div><div class="label">근무 연차 (년)</div><input class="inp-s" id="al-years" type="number" placeholder="2" oninput="calcAnnual()"></div>
+    </div>
+    <div id="al-result" style="display:none;margin-top:14px;background:var(--navy-l);border-radius:var(--rs);padding:16px">
+      <div style="font-size:12px;color:var(--gray-t);margin-bottom:4px">미사용 연차수당</div>
+      <div style="font-size:28px;font-weight:800;color:var(--navy)" id="al-amount"></div>
+      <div style="font-size:12px;color:var(--gray-t);margin-top:6px" id="al-formula"></div>
+      <div style="font-size:12px;color:var(--navy2);margin-top:8px" id="al-entitle"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">깡통전세 위험도 계산기</div>
+    <div class="card-sub">보증금 대비 근저당 비율로 위험도를 판단합니다.</div>
+    <div class="grid2">
+      <div><div class="label">집 시세 (원)</div><input class="inp-s" id="jt-price" type="number" placeholder="300000000" oninput="calcJeonse()"></div>
+      <div><div class="label">보증금 (원)</div><input class="inp-s" id="jt-deposit" type="number" placeholder="150000000" oninput="calcJeonse()"></div>
+      <div><div class="label">근저당 설정액 (원)</div><input class="inp-s" id="jt-mortgage" type="number" placeholder="100000000" oninput="calcJeonse()"></div>
+      <div><div class="label">선순위 보증금 (원)</div><input class="inp-s" id="jt-prior" type="number" placeholder="0" oninput="calcJeonse()"></div>
+    </div>
+    <div id="jt-result" style="display:none;margin-top:14px;border-radius:var(--rs);padding:16px" id="jt-result-box">
+      <div style="font-size:12px;color:var(--gray-t);margin-bottom:4px">위험도</div>
+      <div style="font-size:24px;font-weight:800;margin-bottom:6px" id="jt-grade"></div>
+      <div style="font-size:13px;line-height:1.7" id="jt-detail"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 체크리스트 ══ -->
+<div class="wrap page" id="p-checklist">
+  <div class="sec-head"><h2>✅ 상황별 체크리스트</h2></div>
+  <div class="doc-tabs" id="clTabs">
+    <button class="dtab on" data-cl="contract" onclick="selCL(this)">알바 계약 전</button>
+    <button class="dtab" data-cl="estate" onclick="selCL(this)">전월세 계약 전</button>
+    <button class="dtab" data-cl="quit" onclick="selCL(this)">퇴사 전</button>
+    <button class="dtab" data-cl="consumer" onclick="selCL(this)">소비자 피해 시</button>
+  </div>
+  <div class="card" id="clContent"></div>
+  <div style="margin-top:12px;display:flex;gap:7px">
+    <button class="btn sec" onclick="resetCL()">초기화</button>
+    <button class="btn sec" onclick="copyCL()">📋 체크 결과 복사</button>
+  </div>
+</div>
+
+<!-- ══ 내 기록 ══ -->
+<div class="wrap page" id="p-history">
+  <div class="sec-head"><h2>📁 내 분석 기록</h2><button class="btn sec" onclick="clearHistory()">전체 삭제</button></div>
+  <div id="historyList"></div>
+</div>
+
+<!-- ══ 기관 안내 ══ -->
+<div class="wrap page" id="p-agency">
+  <div class="sec-head"><h2>📞 관련 기관 안내</h2></div>
+  <div class="agency-grid">
+    <a class="ag-card" href="tel:1350"><div class="ag-icon">👷</div><div class="ag-name">고용노동부</div><div class="ag-tel">☎ 1350</div><div class="ag-desc">임금체불·부당해고·근로조건 신고</div></a>
+    <a class="ag-card" href="tel:132"><div class="ag-icon">⚖️</div><div class="ag-name">법률구조공단</div><div class="ag-tel">☎ 132</div><div class="ag-desc">무료 법률상담 및 소송 지원</div></a>
+    <a class="ag-card" href="tel:1372"><div class="ag-icon">🛒</div><div class="ag-name">소비자원</div><div class="ag-tel">☎ 1372</div><div class="ag-desc">소비자 피해 상담·분쟁조정</div></a>
+    <a class="ag-card" href="tel:1811-0114"><div class="ag-icon">🏠</div><div class="ag-name">주거복지센터</div><div class="ag-tel">☎ 1811-0114</div><div class="ag-desc">전세사기 피해 상담·지원</div></a>
+    <a class="ag-card" href="tel:1644-2828"><div class="ag-icon">🏥</div><div class="ag-name">건강보험심사평가원</div><div class="ag-tel">☎ 1644-2828</div><div class="ag-desc">의료비 과다청구 이의신청</div></a>
+    <a class="ag-card" href="tel:112"><div class="ag-icon">🚔</div><div class="ag-name">경찰청(고소)</div><div class="ag-tel">☎ 112</div><div class="ag-desc">사기·횡령 등 형사 고소</div></a>
+    <a class="ag-card" href="https://www.law.go.kr" target="_blank"><div class="ag-icon">📖</div><div class="ag-name">국가법령정보센터</div><div class="ag-tel">🌐 law.go.kr</div><div class="ag-desc">전체 법령·판례 무료 열람</div></a>
+    <a class="ag-card" href="https://glaw.scourt.go.kr" target="_blank"><div class="ag-icon">🏛️</div><div class="ag-name">대법원 법고을</div><div class="ag-tel">🌐 glaw.scourt.go.kr</div><div class="ag-desc">대법원 판례 전문 검색</div></a>
+  </div>
+</div>
+
+<!-- ══ 설정 ══ -->
+<div class="wrap page" id="p-settings">
+  <div class="sec-head"><h2>⚙️ 설정</h2></div>
+
+  <div class="card">
+    <div class="card-title">🤖 AI 선택</div>
+    <div class="card-sub">사용할 AI를 선택하고 API 키를 입력하세요. 키는 이 기기에만 저장됩니다.</div>
+    <div class="ai-grid" id="aiGrid">
+      <div class="ai-card on" data-ai="claude" onclick="selAI(this)">
+        <div class="ai-name">Claude (Anthropic)<span class="ai-badge paid">유료</span></div>
+        <div class="ai-desc">claude-sonnet-4 — 한국어 법률 분석 최적화</div>
+      </div>
+      <div class="ai-card" data-ai="gpt4" onclick="selAI(this)">
+        <div class="ai-name">GPT-4o (OpenAI)<span class="ai-badge paid">유료</span></div>
+        <div class="ai-desc">gpt-4o — 범용 고성능 AI</div>
+      </div>
+      <div class="ai-card" data-ai="gemini" onclick="selAI(this)">
+        <div class="ai-name">Gemini (Google)<span class="ai-badge paid">유료</span></div>
+        <div class="ai-desc">gemini-1.5-pro — 구글 AI</div>
+      </div>
+      <div class="ai-card" data-ai="deepseek" onclick="selAI(this)">
+        <div class="ai-name">DeepSeek<span class="ai-badge free">저렴</span></div>
+        <div class="ai-desc">deepseek-chat — 비용 효율적</div>
+      </div>
+    </div>
+
+    <div id="apiKeySection">
+      <div class="label" id="apiKeyLabel">Claude API 키 (Anthropic)</div>
+      <div style="display:flex;gap:7px;margin-bottom:8px">
+        <input class="inp-s" id="apiKeyInp" type="password" placeholder="sk-ant-api03-..." style="flex:1;font-family:monospace;font-size:13px">
+        <button class="btn" onclick="saveApiKey()">저장</button>
+        <button class="btn sec" onclick="toggleKeyVisible()">👁️</button>
+      </div>
+      <div id="apiKeyStatus" style="font-size:12px;margin-bottom:12px"></div>
+      <div style="background:var(--navy-l);border-radius:var(--rs);padding:12px;font-size:12px;line-height:1.9;color:var(--navy)" id="apiGuide"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ℹ️ 서비스 정보</div>
+    <div style="font-size:13px;line-height:2.1;color:var(--gray-t)">
+      <div>버전 <strong style="color:var(--text)">Beta 1.0</strong></div>
+      <div>제작 <strong style="color:var(--text)">한애리</strong></div>
+      <div>법령 출처 <strong style="color:var(--text)">국가법령정보센터 / 대법원 법고을</strong></div>
+      <div style="margin-top:8px;font-size:11px;line-height:1.7">이 서비스는 법적 정보 제공을 목적으로 하며 법률 자문이 아닙니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- API 키 없을 때 배너 -->
+<div class="api-banner" id="apiBanner" style="display:none">
+  <p>⚠️ <strong>API 키 미설정.</strong> 설정에서 AI와 API 키를 입력하면 AI 기능을 사용할 수 있습니다. (판례 직접 검색은 API 없이도 가능)</p>
+  <button onclick="goSettings()" style="background:#fff;color:var(--navy);border:none;border-radius:6px;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">설정하기 →</button>
+</div>
+
+<!-- 시작 안내 모달 -->
+<div id="welcomeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:16px;max-width:440px;width:100%;padding:28px 24px;position:relative">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:40px;margin-bottom:10px">🆘</div>
+      <div style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:6px">생활법률 119에 오신 걸 환영합니다</div>
+      <div style="font-size:13px;color:var(--gray-t);line-height:1.7">법을 몰라서 포기하는 사람이 없도록<br>실제 판례·법령 기반 시민 법률 AI 플랫폼입니다</div>
+    </div>
+    <div style="background:var(--gray-bg);border-radius:var(--rs);padding:16px;margin-bottom:18px">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">🚀 시작하는 방법</div>
+      <div style="font-size:13px;line-height:2;color:var(--text)">
+        <div>📋 <strong>판례·기관 검색</strong> — API 키 없이 바로 사용 가능</div>
+        <div>⚖️ <strong>AI 법률 분석</strong> — ⚙️ 설정에서 API 키 입력 후 사용</div>
+        <div>📝 <strong>법적 문서 작성</strong> — API 키 입력 후 사용</div>
+      </div>
+    </div>
+    <div style="background:var(--navy-l);border-radius:var(--rs);padding:12px;margin-bottom:18px;font-size:12px;color:var(--navy);line-height:1.8">
+      <strong>💡 API 키란?</strong><br>
+      Claude, GPT-4o 등 AI 서비스를 사용하기 위한 개인 인증 키입니다.<br>
+      각 AI 서비스에서 무료로 발급받을 수 있습니다.<br>
+      키는 이 기기에만 저장되며 외부로 전송되지 않습니다.
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeWelcome(false)" style="flex:1;background:var(--white);color:var(--navy);border:1.5px solid var(--gray-bd);border-radius:var(--rs);padding:11px;font-size:13px;font-weight:700;cursor:pointer">판례 검색 먼저 →</button>
+      <button onclick="closeWelcome(true)" style="flex:1;background:var(--navy);color:#fff;border:none;border-radius:var(--rs);padding:11px;font-size:13px;font-weight:700;cursor:pointer">API 키 설정하기 →</button>
+    </div>
+    <div style="text-align:center;margin-top:12px"><label style="font-size:11px;color:var(--gray-t);cursor:pointer"><input type="checkbox" id="dontShow" style="margin-right:4px">다시 보지 않기</label></div>
+  </div>
+</div>
+
+<script>
+const CATS={
+  contract:{title:'📄 계약서 내용을 입력하세요',sub:'계약서의 주요 조항이나 의심스러운 내용을 붙여넣거나 상황을 설명해주세요.',ph:'예: 주휴수당은 지급하지 않는다. 근무 중 사고 책임은 직원 본인...',ex:['주휴수당 지급 불가 조항','PT 중도해지 환불 불가','알바 4대보험 미가입','수습기간 임금 50%']},
+  estate:{title:'🏠 부동산 상황을 설명해주세요',sub:'전월세 계약 내용, 등기부등본 정보, 특약 조항 등을 입력해주세요.',ph:'예: 보증금 1억, 근저당 8000만원. 특약에 보증금 반환 시 임차인 세금 부담...',ex:['깡통전세 위험 확인','보증금 반환 청구','묵시적 갱신 권리','전입신고 효력']},
+  labor:{title:'💼 노동 관련 상황을 입력하세요',sub:'근무 기간, 급여, 퇴직 상황 등을 구체적으로 알려주세요.',ph:'예: 1년 3개월 근무, 월급 230만원, 연차 한 번도 못 씀. 갑자기 해고 통보...',ex:['퇴직금 계산','부당해고 확인','미지급 임금 청구','연차수당 정산']},
+  medical:{title:'🏥 의료비 관련 내용을 입력하세요',sub:'진료 내용, 청구 금액, 의심스러운 항목 등을 설명해주세요.',ph:'예: 감기 외래 진료인데 비급여 항목 5만원 청구. 주사 맞은 기억 없는데...',ex:['비급여 항목 확인','과다청구 이의신청','실손보험 청구','본인부담금 확인']},
+  consumer:{title:'🛍️ 소비자 피해 상황을 설명해주세요',sub:'구매 경위, 피해 내용, 업체 대응 등을 구체적으로 입력해주세요.',ph:'예: 배달음식 잘못 왔는데 환불 거부. 리뷰에 같은 피해자 다수...',ex:['환불 거부 대응','배달 사기 신고','허위광고 피해','AS 불이행']},
+  utility:{title:'🔧 공과금·하자 상황을 입력하세요',sub:'이상 청구 내역, 하자 발생 시기와 내용 등을 설명해주세요.',ph:'예: 전기세가 지난달보다 3배. 사용량은 비슷한데 관리사무소 답변 없음...',ex:['전기세 이상청구','아파트 하자보수','관리비 부당 징수','누수 피해 보상']}
+};
+
+const AI_CFG={
+  claude:{label:'Claude API 키 (Anthropic)',guide:'1. <a href="https://console.anthropic.com" target="_blank" style="color:var(--navy2);font-weight:700">console.anthropic.com</a> 접속<br>2. 회원가입 → API Keys → Create Key<br>3. sk-ant-... 형태의 키 복사 후 위에 붙여넣기<br><span style="color:var(--gray-t);font-size:11px">※ 첫 가입 시 무료 크레딧 제공</span>',ph:'sk-ant-api03-...'},
+  gpt4:{label:'OpenAI API 키 (GPT-4o)',guide:'1. <a href="https://platform.openai.com" target="_blank" style="color:var(--navy2);font-weight:700">platform.openai.com</a> 접속<br>2. API Keys → Create new secret key<br>3. sk-... 형태의 키 복사 후 위에 붙여넣기',ph:'sk-...'},
+  gemini:{label:'Google AI API 키 (Gemini)',guide:'1. <a href="https://aistudio.google.com" target="_blank" style="color:var(--navy2);font-weight:700">aistudio.google.com</a> 접속<br>2. Get API key → Create API key<br>3. AIza... 형태의 키 복사',ph:'AIza...'},
+  deepseek:{label:'DeepSeek API 키',guide:'1. <a href="https://platform.deepseek.com" target="_blank" style="color:var(--navy2);font-weight:700">platform.deepseek.com</a> 접속<br>2. API Keys → Create API key<br>3. sk-... 형태의 키 복사',ph:'sk-...'}
+};
+
+const SYS=`당신은 대한민국 생활법률 AI '생활법률 119'입니다. 실제 법령과 판례 기반으로 분석합니다.
+반드시 아래 JSON 형식으로만 응답 (다른 텍스트 없이):
+{"signal":"danger"|"warn"|"safe","signal_text":"🔴 위험"|"🟡 주의"|"🟢 정상","signal_desc":"한 줄 요약","analysis":"상세 분석 3~4문단. 법령 조문 번호 반드시 포함","laws":[{"name":"법령명 제OO조","url_keyword":"법령명"}],"precedents":[{"title":"판례명","court":"법원명","date":"선고일","case_no":"사건번호","summary":"판결 핵심 2~3문장","keyword":"검색어"}],"actions":["행동1","행동2","행동3"],"doc_type":"고소장"|"진정서"|"내용증명"|null}`;
+
+const DOC_SYS=`당신은 대한민국 법률 문서 전문 AI입니다. 실제 법원·행정기관 제출 가능 수준의 문서를 작성합니다.
+JSON으로만 응답: {"title":"문서 제목","content":"문서 전체 (법적 서식 완벽하게, 날짜/서명란 공란 포함)"}
+원칙: 법령 조문 인용, 사실관계 명확히, 요구사항 구체적으로, 날짜는 20  년  월  일 공란`;
+
+const LAW_SYS=`한국 법령 전문가. JSON으로만: {"law_name":"정식명","articles":[{"no":"제OO조","title":"제목","content":"조문 요약"}],"summary":"핵심 2문장","url_keyword":"검색어"}`;
+const PREC_SYS=`한국 판례 전문가. 실제 대법원 판례만 JSON 배열: [{"title":"사건명","court":"법원","date":"YYYY.MM.DD","case_no":"정확한 사건번호","summary":"핵심 3문장","significance":"시민에게 중요한 이유","keyword":"법고을 검색어"}]`;
+
+let curCat='contract',curAI='claude',curResult=null,curDocType='고소장';
+let hist=JSON.parse(localStorage.getItem('law119_hist')||'[]');
+
+function getApiKey(){return localStorage.getItem('law119_key_'+curAI)||'';}
+function hasKey(){return !!getApiKey();}
+
+function syncMobTab(btn){
+  document.querySelectorAll('.mob-tab').forEach(t=>t.classList.remove('on'));
+  if(btn&&btn.classList.contains('mob-tab'))btn.classList.add('on');
+}
+const _goPage=goPage;
+function goPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');
+  if(btn&&btn.classList.contains('ntab'))btn.classList.add('on');
+  document.querySelectorAll('.mob-tab').forEach(t=>{
+    t.classList.remove('on');
+    if(t.dataset.page===id)t.classList.add('on');
+  });
+  if(id==='history')renderHistory();
+  checkBanner();
+}
+function goSettings(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('p-settings').classList.add('on');
+  document.querySelectorAll('.ntab')[5].classList.add('on');
+}
+
+function checkBanner(){
+  document.getElementById('apiBanner').style.display=hasKey()?'none':'flex';
+}
+
+function selAI(card){
+  document.querySelectorAll('.ai-card').forEach(c=>c.classList.remove('on'));
+  card.classList.add('on');
+  curAI=card.dataset.ai;
+  const cfg=AI_CFG[curAI];
+  document.getElementById('apiKeyLabel').textContent=cfg.label;
+  document.getElementById('apiKeyInp').placeholder=cfg.ph;
+  document.getElementById('apiGuide').innerHTML=cfg.guide;
+  const saved=localStorage.getItem('law119_key_'+curAI)||'';
+  document.getElementById('apiKeyInp').value=saved?'••••••••••••':'';
+  document.getElementById('apiKeyStatus').innerHTML=saved?'<span style="color:var(--green)">✅ 저장된 키 있음</span>':'<span style="color:var(--gray-t)">키 없음</span>';
+  checkBanner();
+}
+
+function saveApiKey(){
+  const val=document.getElementById('apiKeyInp').value.trim();
+  if(!val){alert('API 키를 입력해주세요.');return;}
+  localStorage.setItem('law119_key_'+curAI,val);
+  document.getElementById('apiKeyStatus').innerHTML='<span style="color:var(--green)">✅ 저장되었습니다!</span>';
+  checkBanner();
+  setTimeout(()=>{document.getElementById('apiKeyInp').value='••••••••••••';},500);
+}
+
+function toggleKeyVisible(){
+  const inp=document.getElementById('apiKeyInp');
+  inp.type=inp.type==='password'?'text':'password';
+}
+
+async function callAI(sys,msg){
+  const key=getApiKey();
+  if(!key)throw new Error('NO_KEY');
+  if(curAI==='claude'){
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:msg}]})});
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    return d.content?.[0]?.text||'';
+  }
+  if(curAI==='gpt4'){
+    const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:sys},{role:'user',content:msg}],max_tokens:1000})});
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    return d.choices?.[0]?.message?.content||'';
+  }
+  if(curAI==='gemini'){
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:sys+'\n\n'+msg}]}]})});
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  }
+  if(curAI==='deepseek'){
+    const r=await fetch('https://api.deepseek.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:sys},{role:'user',content:msg}],max_tokens:1000})});
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    return d.choices?.[0]?.message?.content||'';
+  }
+  throw new Error('지원하지 않는 AI입니다.');
+}
+
+function parseJSON(text){
+  const c=text.replace(/```json|```/g,'').trim();
+  const m=c.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+  return JSON.parse(m?m[1]:c);
+}
+
+function selCat(btn){
+  document.querySelectorAll('.cbt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');curCat=btn.dataset.cat;
+  const c=CATS[curCat];
+  document.getElementById('panelTitle').textContent=c.title;
+  document.getElementById('panelSub').textContent=c.sub;
+  document.getElementById('inputArea').placeholder=c.ph;
+  document.getElementById('resultWrap').style.display='none';
+  renderChips(c.ex);
+}
+function renderChips(ex){
+  document.getElementById('exChips').innerHTML='<span style="font-size:11px;color:var(--gray-t);margin-right:3px">예시→</span>'+ex.map(e=>`<span class="chip" onclick="fillEx('${e}')">${e}</span>`).join('');
+}
+function fillEx(t){document.getElementById('inputArea').value=t+' 상황에 대해 분석해주세요.';document.getElementById('inputArea').focus();}
+
+async function analyze(){
+  const inp=document.getElementById('inputArea').value.trim();
+  if(!inp){alert('상황을 입력해주세요.');return;}
+  if(!hasKey()){goSettings();return;}
+  const btn=document.getElementById('analyzeBtn');
+  const btnTxt=document.getElementById('btnTxt');
+  btn.disabled=true;btnTxt.innerHTML='<span class="spinner"></span> AI 분석 중...';
+  const rw=document.getElementById('resultWrap');rw.style.display='block';
+  setSig('loading','⏳ 분석 중','판례와 법령을 검토하고 있습니다...');
+  ['resMain','resLaws','resPrecedents','resActions'].forEach(id=>document.getElementById(id).innerHTML='');
+  try{
+    const catNames={contract:'계약서 분석',estate:'부동산·임차인 보호',labor:'노동권 보호',medical:'의료비 점검',consumer:'소비자 분쟁',utility:'공과금·하자'};
+    const raw=await callAI(SYS,`[카테고리: ${catNames[curCat]}]\n\n${inp}`);
+    const r=parseJSON(raw);
+    curResult={...r,input:inp,cat:curCat,catName:catNames[curCat],time:new Date().toLocaleString()};
+    setSig(r.signal,r.signal_text,r.signal_desc);
+    document.getElementById('resMain').textContent=r.analysis;
+    document.getElementById('resLaws').innerHTML=(r.laws||[]).map(l=>{
+      const kw=encodeURIComponent(l.url_keyword||l.name);
+      return `<a class="law-tag" href="https://www.law.go.kr/lsSc.do?query=${kw}" target="_blank">⚖️ ${l.name} ↗</a>`;
+    }).join(' ');
+    document.getElementById('resPrecedents').innerHTML=(r.precedents||[]).map(p=>{
+      const kw=encodeURIComponent(p.keyword||p.title);
+      return `<div class="prec-item"><div class="prec-title">📜 ${p.title}</div><div class="prec-meta">${p.court} | ${p.date} | ${p.case_no}</div><div class="prec-sum">${p.summary}</div><a class="prec-link" href="https://glaw.scourt.go.kr/wsjo/panre/sjo060.do?q=${kw}" target="_blank">🏛️ 대법원 법고을에서 전문 보기 ↗</a></div>`;
+    }).join('');
+    document.getElementById('resActions').innerHTML=(r.actions||[]).map((a,i)=>`<div class="act-item"><span class="act-num">${i+1}</span><span>${a}</span></div>`).join('');
+  }catch(e){
+    if(e.message==='NO_KEY'){goSettings();return;}
+    setSig('warn','⚠️ 분석 오류','잠시 후 다시 시도해주세요.');
+    document.getElementById('resMain').textContent='분석 중 오류가 발생했습니다.\n\n즉시 도움:\n• 고용노동부: 1350\n• 법률구조공단: 132\n• 소비자원: 1372';
+  }
+  btn.disabled=false;btnTxt.innerHTML='⚖️ 다시 분석하기';
+  rw.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function setSig(type,label,desc){
+  const icons={danger:'🔴',warn:'🟡',safe:'🟢',loading:'⏳'};
+  document.getElementById('sigBar').className='sig-bar '+type;
+  document.getElementById('sigDot').className='sig-dot '+type;
+  document.getElementById('sigDot').textContent=icons[type]||'⏳';
+  document.getElementById('sigLbl').className='sig-lbl '+type;
+  document.getElementById('sigLbl').textContent=label;
+  document.getElementById('sigDesc').textContent=desc;
+}
+
+/* 판례 직접 검색 — AI 없이 */
+function directSearch(){
+  const q=document.getElementById('directSearchInp').value.trim();
+  if(!q){alert('검색어를 입력해주세요.');return;}
+  directSearchWith(q);
+}
+function directSearchWith(q){
+  document.getElementById('directSearchInp').value=q;
+  const kw=encodeURIComponent(q);
+  const links=[
+    {label:'🏛️ 대법원 법고을 판례 검색',url:`https://glaw.scourt.go.kr/wsjo/panre/sjo060.do?q=${kw}`,desc:'대법원 공식 판례 전문 검색'},
+    {label:'📖 국가법령정보센터 법령 검색',url:`https://www.law.go.kr/lsSc.do?query=${kw}`,desc:'현행 법령 조문 검색'},
+    {label:'⚖️ 국가법령정보센터 판례 검색',url:`https://www.law.go.kr/precSc.do?query=${kw}`,desc:'헌법재판소·각급 법원 판례'},
+    {label:'🔍 종합 법률정보 검색',url:`https://glaw.scourt.go.kr/wsjo/intesrch/sjo020.do?q=${kw}`,desc:'법원 종합 법률정보 통합 검색'},
+  ];
+  document.getElementById('directResultTitle').textContent=`"${q}" 검색 결과 — 클릭하면 해당 사이트로 이동합니다`;
+  document.getElementById('directResultLinks').innerHTML=links.map(l=>`<a class="direct-btn" href="${l.url}" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:10px 14px"><div><div style="font-weight:700;font-size:13px">${l.label}</div><div style="font-size:11px;color:var(--gray-t);margin-top:2px">${l.desc}</div></div><span style="font-size:11px;color:var(--navy2)">→</span></a>`).join('');
+  document.getElementById('directResult').style.display='block';
+}
+
+async function searchLaw(){
+  const q=document.getElementById('lawSearchInp').value.trim();if(!q)return;
+  if(!hasKey()){alert('법령 AI 검색은 API 키가 필요합니다. 설정에서 입력해주세요.\n\n키 없이 검색하려면 위의 직접 검색을 이용해주세요.');return;}
+  const btn=document.getElementById('lawBtnTxt');
+  btn.innerHTML='<span class="spinner" style="border-top-color:#fff"></span>';
+  document.getElementById('lawResults').innerHTML='';
+  try{
+    const raw=await callAI(LAW_SYS,`법령 검색: ${q}`);
+    const r=parseJSON(raw);
+    const kw=encodeURIComponent(r.url_keyword||q);
+    let html=`<div style="border:1px solid var(--gray-bd);border-radius:var(--rs);overflow:hidden"><div style="background:var(--navy-l);padding:11px 15px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:14px;font-weight:700;color:var(--navy)">📖 ${r.law_name}</div><a href="https://www.law.go.kr/lsSc.do?query=${kw}" target="_blank" class="btn sec" style="text-decoration:none;font-size:11px;padding:6px 10px">국가법령정보센터 ↗</a></div><div style="padding:13px 15px"><p style="font-size:13px;color:var(--gray-t);margin-bottom:11px">${r.summary}</p>`;
+    (r.articles||[]).forEach(a=>{html+=`<div style="border-top:1px solid var(--gray-bd);padding:9px 0"><div style="font-weight:700;font-size:12px;color:var(--navy);margin-bottom:3px">${a.no} ${a.title}</div><div style="font-size:13px;line-height:1.7">${a.content}</div></div>`;});
+    html+=`</div></div>`;
+    document.getElementById('lawResults').innerHTML=html;
+  }catch(e){document.getElementById('lawResults').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">오류가 발생했습니다. API 키를 확인해주세요.</div></div>';}
+  btn.innerHTML='🔍 검색';
+}
+
+async function searchPrecedent(){
+  const q=document.getElementById('precSearchInp').value.trim();if(!q)return;
+  if(!hasKey()){alert('판례 AI 검색은 API 키가 필요합니다.\n\n위의 직접 검색을 이용해주세요.');return;}
+  const btn=document.getElementById('precBtnTxt');
+  btn.innerHTML='<span class="spinner" style="border-top-color:#fff"></span>';
+  document.getElementById('precResults').innerHTML='';
+  try{
+    const raw=await callAI(PREC_SYS,`판례 검색: ${q}`);
+    const arr=parseJSON(raw);
+    document.getElementById('precResults').innerHTML=(arr||[]).map(p=>{
+      const kw=encodeURIComponent(p.keyword||q);
+      return `<div class="prec-item"><div class="prec-title">📜 ${p.title}</div><div class="prec-meta">${p.court} | ${p.date} | ${p.case_no}</div><div class="prec-sum" style="margin-bottom:6px">${p.summary}</div><div style="font-size:12px;color:var(--green);background:var(--green-l);border-radius:4px;padding:6px 9px;margin-bottom:7px">💡 ${p.significance}</div><a class="prec-link" href="https://glaw.scourt.go.kr/wsjo/panre/sjo060.do?q=${kw}" target="_blank">🏛️ 대법원 법고을 전문 보기 ↗</a></div>`;
+    }).join('');
+  }catch(e){document.getElementById('precResults').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">오류가 발생했습니다. API 키를 확인해주세요.</div></div>';}
+  btn.innerHTML='🔍 검색';
+}
+
+function quickLaw(q){document.getElementById('lawSearchInp').value=q;searchLaw();}
+function quickPrec(q){document.getElementById('precSearchInp').value=q;searchPrecedent();}
+
+function selDocType(btn){
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');curDocType=btn.dataset.dtype;
+  document.getElementById('docResultWrap').style.display='none';
+}
+
+async function makeDoc(){
+  const sit=document.getElementById('doc-situation').value.trim();
+  if(!sit){alert('피해 상황을 입력해주세요.');return;}
+  if(!hasKey()){goSettings();return;}
+  const btn=document.getElementById('docBtn'),btnTxt=document.getElementById('docBtnTxt');
+  btn.disabled=true;btnTxt.innerHTML='<span class="spinner"></span> AI가 문서 작성 중...';
+  document.getElementById('docResultWrap').style.display='none';
+  try{
+    const name=document.getElementById('doc-name').value.trim()||'신청인';
+    const tel=document.getElementById('doc-tel').value.trim()||'010-0000-0000';
+    const addr=document.getElementById('doc-addr').value.trim()||'주소 미기입';
+    const target=document.getElementById('doc-target').value.trim()||'피신청인';
+    const raw=await callAI(`문서종류: ${curDocType}\n신청인: ${name} (${tel}, ${addr})\n피신청인: ${target}\n피해상황: ${sit}`,DOC_SYS);
+    const r=parseJSON(raw);
+    document.getElementById('docResultTitle').textContent=r.title||curDocType;
+    document.getElementById('docPreview').textContent=r.content||'문서 작성 실패';
+    document.getElementById('docResultWrap').style.display='block';
+    document.getElementById('docResultWrap').scrollIntoView({behavior:'smooth'});
+  }catch(e){alert('문서 작성 오류. 다시 시도해주세요.');}
+  btn.disabled=false;btnTxt.innerHTML='📝 AI로 문서 작성하기';
+}
+
+function copyDoc(){navigator.clipboard.writeText(document.getElementById('docPreview').textContent).then(()=>alert('복사되었습니다.'));}
+function downloadDoc(){
+  const text=document.getElementById('docPreview').textContent;
+  const title=document.getElementById('docResultTitle').textContent;
+  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title+'.txt';a.click();
+}
+
+function saveHistory(){
+  if(!curResult)return;
+  hist.unshift(curResult);if(hist.length>50)hist=hist.slice(0,50);
+  localStorage.setItem('law119_hist',JSON.stringify(hist));
+  alert('기록이 저장되었습니다.');
+}
+function renderHistory(){
+  const el=document.getElementById('historyList');
+  if(!hist.length){el.innerHTML='<div class="empty"><div class="empty-icon">📁</div><div class="empty-text">아직 저장된 기록이 없습니다.<br>분석 후 저장 버튼을 눌러보세요.</div></div>';return;}
+  el.innerHTML=hist.map((h,i)=>`<div class="hist-item" onclick="loadHist(${i})"><div class="hist-top"><span class="hist-cat">${h.catName||h.cat}</span><span class="hist-date">${h.time}</span></div><div style="font-size:13px;line-height:1.5;margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${h.input}</div><span class="hist-sig ${h.signal}">${h.signal_text}</span></div>`).join('');
+}
+function loadHist(i){
+  const h=hist[i];
+  document.getElementById('inputArea').value=h.input;
+  document.querySelectorAll('.cbt').forEach(b=>{if(b.dataset.cat===h.cat)selCat(b);});
+  goPage('analyze',document.querySelector('.ntab'));
+}
+function clearHistory(){if(!confirm('전체 삭제?'))return;hist=[];localStorage.removeItem('law119_hist');renderHistory();}
+
+function goDocFromAnalysis(){
+  if(curResult?.doc_type){const t=document.querySelector(`[data-dtype="${curResult.doc_type}"]`);if(t)selDocType(t);if(curResult.input)document.getElementById('doc-situation').value=curResult.input;}
+  goPage('docs',null);document.querySelectorAll('.ntab')[1].classList.add('on');document.querySelectorAll('.ntab')[0].classList.remove('on');
+}
+function shareResult(){
+  const text=curResult?`[생활법률 119 분석]\n${curResult.signal_text} ${curResult.signal_desc}`:' 생활법률 119 — 내 권리를 AI로 확인하세요!';
+  if(navigator.share)navigator.share({title:'생활법률 119',text}).catch(()=>{});
+  else navigator.clipboard.writeText(text).then(()=>alert('복사되었습니다.'));
+}
+
+
+// ── 퇴직금 계산기 ──
+function calcRetire(){
+  const wage=parseFloat(document.getElementById('rc-wage').value)||0;
+  const yr=parseFloat(document.getElementById('rc-year').value)||0;
+  const mo=parseFloat(document.getElementById('rc-month').value)||0;
+  const totalDays=yr*365+mo*30;
+  if(wage<=0||totalDays<365){document.getElementById('rc-result').style.display='none';return;}
+  const daily=wage/30;
+  const amount=Math.round(daily*30*(totalDays/365));
+  document.getElementById('rc-result').style.display='block';
+  document.getElementById('rc-amount').textContent=amount.toLocaleString()+'원';
+  document.getElementById('rc-formula').textContent=`1일 평균임금 ${Math.round(daily).toLocaleString()}원 × 30일 × ${(totalDays/365).toFixed(2)}년`;
+}
+
+// ── 주휴수당 계산기 ──
+function calcHoliday(){
+  const wage=parseFloat(document.getElementById('hw-wage').value)||0;
+  const hours=parseFloat(document.getElementById('hw-hours').value)||0;
+  if(wage<=0||hours<=0){document.getElementById('hw-result').style.display='none';return;}
+  document.getElementById('hw-result').style.display='block';
+  if(hours<15){
+    document.getElementById('hw-amount').textContent='미발생';
+    document.getElementById('hw-formula').textContent='주 15시간 미만 근무 시 주휴수당 미발생';
+    document.getElementById('hw-warn').textContent='';
+    return;
+  }
+  const dayHours=hours/5;
+  const amount=Math.round(wage*dayHours);
+  document.getElementById('hw-amount').textContent=amount.toLocaleString()+'원';
+  document.getElementById('hw-formula').textContent=`시급 ${wage.toLocaleString()}원 × 일 소정근로시간 ${dayHours.toFixed(1)}시간`;
+  document.getElementById('hw-warn').textContent='⚠️ 주휴수당 미지급 시 근로기준법 제55조 위반 — 고용노동부 1350 신고 가능';
+}
+
+// ── 연차수당 계산기 ──
+function calcAnnual(){
+  const wage=parseFloat(document.getElementById('al-wage').value)||0;
+  const days=parseFloat(document.getElementById('al-days').value)||0;
+  const years=parseFloat(document.getElementById('al-years').value)||0;
+  if(wage<=0||days<=0){document.getElementById('al-result').style.display='none';return;}
+  const amount=Math.round(wage*days);
+  let entitle='';
+  if(years>=1&&years<3)entitle=`근속 ${years}년 → 법정 연차 15일`;
+  else if(years>=3)entitle=`근속 ${years}년 → 법정 연차 ${Math.min(15+Math.floor((years-1)/2),25)}일`;
+  else entitle='1년 미만 → 월 1일 발생 (최대 11일)';
+  document.getElementById('al-result').style.display='block';
+  document.getElementById('al-amount').textContent=amount.toLocaleString()+'원';
+  document.getElementById('al-formula').textContent=`일 평균임금 ${wage.toLocaleString()}원 × 미사용 ${days}일`;
+  document.getElementById('al-entitle').textContent='📌 '+entitle;
+}
+
+// ── 깡통전세 계산기 ──
+function calcJeonse(){
+  const price=parseFloat(document.getElementById('jt-price').value)||0;
+  const deposit=parseFloat(document.getElementById('jt-deposit').value)||0;
+  const mortgage=parseFloat(document.getElementById('jt-mortgage').value)||0;
+  const prior=parseFloat(document.getElementById('jt-prior').value)||0;
+  if(price<=0||deposit<=0){document.getElementById('jt-result').style.display='none';return;}
+  const total=deposit+mortgage+prior;
+  const ratio=Math.round((total/price)*100);
+  const safeAmount=Math.round(price*0.7);
+  const recover=price-mortgage-prior;
+  let grade,color,detail;
+  if(ratio>=100){grade='🔴 매우 위험';color=var_='var(--red-l)';detail=`총 채권(${total.toLocaleString()}원)이 시세(${price.toLocaleString()}원)를 초과합니다. 경매 시 보증금 전액 손실 위험이 있습니다. 즉시 계약을 재검토하세요.`;}
+  else if(ratio>=80){grade='🟠 위험';color='#FFF3E0';detail=`총 채권 비율이 ${ratio}%로 높습니다. 경매 시 보증금 일부 손실 가능성이 있습니다. 전세보증보험 가입을 강력히 권장합니다.`;}
+  else if(ratio>=60){grade='🟡 주의';color=`var(--yellow-l)`;detail=`총 채권 비율 ${ratio}%. 비교적 안전하지만 전세보증보험 가입을 권장합니다. 회수 가능 금액: 약 ${recover.toLocaleString()}원`;}
+  else{grade='🟢 안전';color=`var(--green-l)`;detail=`총 채권 비율 ${ratio}%. 비교적 안전한 수준입니다. 그래도 전입신고·확정일자는 반드시 받으세요.`;}
+  document.getElementById('jt-result').style.display='block';
+  document.getElementById('jt-result').style.background=color;
+  document.getElementById('jt-grade').textContent=grade+` (${ratio}%)`;
+  document.getElementById('jt-detail').textContent=detail;
+}
+
+// ── 체크리스트 ──
+const CHECKLISTS={
+  contract:{title:'알바 계약 전 체크리스트',items:['근로계약서를 서면으로 작성하는가? (구두 계약 X)','최저시급(2024년 9,860원) 이상인가?','주 15시간 이상이면 주휴수당 조항이 있는가?','4대보험 가입 여부를 확인했는가?','근무 시간·장소·업무 내용이 명확히 적혀있는가?','수습기간이 있다면 최저임금의 90% 이상인가?','해고 예고 조항이 있는가? (30일 전 예고)','퇴직금 조항이 있는가? (1년 이상 근무 시 필수)','야간·주말 근무 시 가산수당 조항이 있는가?','부당한 손해배상 조항은 없는가?']},
+  estate:{title:'전월세 계약 전 체크리스트',items:['등기부등본을 직접 발급해서 확인했는가?','근저당 설정액이 보증금의 70% 미만인가?','집주인이 등기부등본 상 소유자와 동일인인가?','전입신고+확정일자를 받을 예정인가?','전세보증보험 가입이 가능한 물건인가?','특약 조항에 불리한 내용은 없는가?','관리비 항목과 금액이 명확히 기재되어 있는가?','계약 갱신 거절 사유가 명시되어 있는가?','수리비 부담 주체가 명확한가?','임대인의 세금 체납 여부를 확인했는가?']},
+  quit:{title:'퇴사 전 체크리스트',items:['퇴직금 계산기로 예상 금액을 확인했는가?','미사용 연차수당을 청구할 예정인가?','미지급 임금(주휴수당 포함)이 있는가?','퇴직 의사를 서면으로 통보했는가?','회사 비품·서류 반납 목록을 정리했는가?','4대보험 상실 신고 확인 예정인가?','실업급여 수급 요건을 충족하는가?','경업금지 조항 등 퇴직 후 의무사항을 확인했는가?','퇴직금은 퇴직 후 14일 이내 수령 가능','원천징수영수증을 요청할 예정인가?']},
+  consumer:{title:'소비자 피해 시 체크리스트',items:['피해 증거(사진·영상·영수증)를 보관했는가?','구매 일자·금액·업체 정보를 기록했는가?','업체에 먼저 서면으로 항의했는가?','항의 내용과 업체 답변을 기록했는가?','신용카드로 결제했다면 차지백을 고려했는가?','소비자원(1372) 상담을 받을 예정인가?','온라인 구매라면 전자상거래법상 청약철회권 (7일) 확인','허위·과장광고라면 공정위 신고 가능','피해 금액이 소액이라면 소액심판 청구 가능','집단 피해라면 소비자원 집단분쟁조정 신청 가능']}
+};
+let clState={};
+function selCL(btn){
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderCL(btn.dataset.cl);
+}
+function renderCL(key){
+  const cl=CHECKLISTS[key];
+  if(!clState[key])clState[key]=new Array(cl.items.length).fill(false);
+  const done=clState[key].filter(Boolean).length;
+  document.getElementById('clContent').innerHTML=`
+    <div class="card-title">${cl.title}</div>
+    <div style="font-size:12px;color:var(--gray-t);margin-bottom:14px">${done}/${cl.items.length} 완료</div>
+    <div style="background:var(--gray-bd);border-radius:999px;height:6px;margin-bottom:16px"><div style="background:var(--green);height:6px;border-radius:999px;width:${Math.round(done/cl.items.length*100)}%;transition:width .3s"></div></div>
+    ${cl.items.map((item,i)=>`
+      <div onclick="toggleCL('${key}',${i})" style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-bd);cursor:pointer">
+        <div style="width:20px;height:20px;border-radius:50%;border:2px solid ${clState[key][i]?'var(--green)':'var(--gray-bd)'};background:${clState[key][i]?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:12px;color:#fff;transition:all .15s">${clState[key][i]?'✓':''}</div>
+        <span style="font-size:13px;line-height:1.6;color:${clState[key][i]?'var(--gray-t)':'var(--text)'};text-decoration:${clState[key][i]?'line-through':''}">${item}</span>
+      </div>`).join('')}`;
+}
+function toggleCL(key,i){
+  clState[key][i]=!clState[key][i];
+  const cl=document.querySelector('.dtab.on').dataset.cl;
+  renderCL(cl);
+}
+function resetCL(){
+  const key=document.querySelector('.dtab.on').dataset.cl;
+  clState[key]=new Array(CHECKLISTS[key].items.length).fill(false);
+  renderCL(key);
+}
+function copyCL(){
+  const key=document.querySelector('.dtab.on').dataset.cl;
+  const cl=CHECKLISTS[key];
+  const text=cl.title+'\n\n'+cl.items.map((item,i)=>`${clState[key]?.[i]?'[✓]':'[ ]'} ${item}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>alert('복사되었습니다.'));
+}
+renderCL('contract');
+
+// 초기화
+document.getElementById('apiGuide').innerHTML=AI_CFG.claude.guide;
+renderChips(CATS.contract.ex);
+checkBanner();
+
+// 웰컴 모달
+function closeWelcome(goSet){
+  if(document.getElementById('dontShow').checked)localStorage.setItem('law119_welcome','1');
+  document.getElementById('welcomeModal').style.display='none';
+  if(goSet)goSettings();
+  else{goPage('lawsearch',null);document.querySelectorAll('.ntab')[2].classList.add('on');document.querySelectorAll('.ntab')[0].classList.remove('on');}
+}
+if(!localStorage.getItem('law119_welcome')&&!hasKey()){
+  document.getElementById('welcomeModal').style.display='flex';
+}
+</script>
+<!-- 모바일 하단 네비 -->
+<div class="mob-nav">
+  <div class="mob-nav-inner">
+    <button class="mob-tab on" onclick="goPage('analyze',this);syncMobTab(this)" data-page="analyze"><span class="mi">⚖️</span>AI 분석</button>
+    <button class="mob-tab" onclick="goPage('docs',this);syncMobTab(this)" data-page="docs"><span class="mi">📝</span>문서</button>
+    <button class="mob-tab" onclick="goPage('lawsearch',this);syncMobTab(this)" data-page="lawsearch"><span class="mi">🏛️</span>법령·판례</button>
+    <button class="mob-tab" onclick="goPage('calc',this);syncMobTab(this)" data-page="calc"><span class="mi">💰</span>계산기</button>
+    <button class="mob-tab" onclick="goPage('checklist',this);syncMobTab(this)" data-page="checklist"><span class="mi">✅</span>체크</button>
+    <button class="mob-tab" onclick="goPage('settings',this);syncMobTab(this)" data-page="settings"><span class="mi">⚙️</span>설정</button>
+  </div>
+</div>
+
+</body>
+</html>
